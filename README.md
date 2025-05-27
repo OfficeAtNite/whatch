@@ -1,5 +1,7 @@
 # 🎬 Triple Feature - AI Movie Recommendations
 
+> AI-powered movie discovery based on your mood and preferences
+
 A beautiful, mobile-first movie recommendation website that uses multiple AI models to suggest relevant movies based on your mood or vibe.
 
 ![Triple Feature Screenshot](https://via.placeholder.com/800x400/1a1a2e/ffffff?text=Triple+Feature+Movie+Recommendations)
