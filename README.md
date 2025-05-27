@@ -1,70 +1,131 @@
-# Getting Started with Create React App
+# 🎬 Triple Feature - AI Movie Recommendations
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A beautiful, mobile-first movie recommendation website that uses multiple AI models to suggest relevant movies based on your mood or vibe.
 
-## Available Scripts
+![Triple Feature Screenshot](https://via.placeholder.com/800x400/1a1a2e/ffffff?text=Triple+Feature+Movie+Recommendations)
 
-In the project directory, you can run:
+## ✨ Features
 
-### `npm start`
+- **AI-Powered Recommendations**: Get movie suggestions from GPT and Claude based on natural language descriptions
+- **Beautiful Interface**: Clean, mobile-first design with stunning movie posters
+- **Movie Details**: Complete information including summaries, release years, and streaming availability
+- **Wikipedia Integration**: Quick access to detailed movie information
+- **Responsive Design**: Works perfectly on desktop, tablet, and mobile devices
+- **Real-time Search**: Instant results as you describe your movie mood
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 🚀 Live Demo
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Visit the live application: [Triple Feature](https://officeatnite.github.io/whatch)
 
-### `npm test`
+## 🛠️ Tech Stack
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **Frontend**: React + TailwindCSS
+- **AI APIs**: OpenRouter (GPT, Claude)
+- **Movie Data**: The Movie Database (TMDB)
+- **Deployment**: GitHub Pages
 
-### `npm run build`
+## 📋 Prerequisites
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Before running this project, you'll need API keys for:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. **OpenRouter** - For AI movie recommendations
+   - Sign up at [openrouter.ai](https://openrouter.ai)
+   - Get your API key from the dashboard
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2. **TMDB** - For movie posters and details
+   - Sign up at [themoviedb.org](https://www.themoviedb.org/settings/api)
+   - Get your API key from account settings
 
-### `npm run eject`
+## 🔧 Installation
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/officeatnite/whatch.git
+   cd whatch
+   ```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env
+   ```
+   
+   Edit `.env` and add your API keys:
+   ```env
+   REACT_APP_OPENROUTER_API_KEY=your_openrouter_api_key_here
+   REACT_APP_TMDB_API_KEY=your_tmdb_api_key_here
+   ```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+4. **Start the development server**
+   ```bash
+   npm start
+   ```
 
-## Learn More
+5. **Open your browser**
+   Navigate to `http://localhost:3000`
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 🎯 Usage
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+1. **Enter your movie vibe** - Describe what kind of movie you're in the mood for
+   - Examples: "mind-bending sci-fi thrillers"
+   - "romantic comedies from the 90s"
+   - "action movies with high ratings"
 
-### Code Splitting
+2. **Get AI recommendations** - Multiple AI models will suggest movies based on your description
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+3. **Explore results** - Browse movie cards with posters, summaries, and streaming info
 
-### Analyzing the Bundle Size
+4. **Learn more** - Click Wiki buttons for detailed movie information
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## 🚀 Deployment to GitHub Pages
 
-### Making a Progressive Web App
+This project is configured for easy deployment to GitHub Pages:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+1. **Build the project**
+   ```bash
+   npm run build
+   ```
 
-### Advanced Configuration
+2. **Deploy to GitHub Pages**
+   ```bash
+   npm run deploy
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## 🔒 Security
 
-### Deployment
+- API keys are protected using `.gitignore`
+- Environment variables are used for sensitive data
+- `.env.example` provides template for required keys
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## 🤝 Contributing
 
-### `npm run build` fails to minify
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- [OpenRouter](https://openrouter.ai) for AI API access
+- [The Movie Database](https://www.themoviedb.org) for movie data
+- [React](https://reactjs.org) for the frontend framework
+- [TailwindCSS](https://tailwindcss.com) for styling
+
+## 📧 Contact
+
+**officeatnite** - [@officeatnite](https://github.com/officeatnite)
+
+Project Link: [https://github.com/officeatnite/whatch](https://github.com/officeatnite/whatch)
+
+---
+
+⭐ If you found this project helpful, please give it a star!

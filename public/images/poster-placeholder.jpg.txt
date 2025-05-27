@@ -1,0 +1,4 @@
+This is a placeholder for a movie poster image. In a real application, you would have an actual JPG file here.
+
+For development purposes, you can replace this with a real image or use a service like:
+https://placehold.co/300x450/333333/FFFFFF?text=Movie+Poster

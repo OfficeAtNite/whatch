@@ -1,0 +1,341 @@
+.movie-card {
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 0 10px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  animation: slide-up 0.5s ease-out;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.dark .movie-card {
+  background-color: rgba(30, 41, 59, 0.8);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2), 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.movie-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 0 15px rgba(99, 102, 241, 0.2);
+}
+
+.dark .movie-card:hover {
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2), 0 0 15px rgba(129, 140, 248, 0.2);
+}
+
+.movie-poster-container {
+  position: relative;
+  width: 100%;
+  padding-top: 150%; /* 2:3 aspect ratio for movie posters */
+  overflow: hidden;
+}
+
+.movie-poster {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.movie-poster.has-trailer {
+  cursor: pointer;
+}
+
+.movie-poster.has-trailer:hover {
+  transform: scale(1.05);
+}
+
+.play-button-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+}
+
+.play-button-overlay:hover {
+  opacity: 1;
+}
+
+.play-button-overlay svg {
+  width: 4rem;
+  height: 4rem;
+  color: white;
+  filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.5));
+}
+
+.movie-info {
+  padding: 1.25rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.movie-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+  color: #1e293b;
+}
+
+.dark .movie-title {
+  color: white;
+}
+
+.movie-year {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin: 0 0 0.75rem 0;
+}
+
+.dark .movie-year {
+  color: #94a3b8;
+}
+
+.movie-summary {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #334155;
+  margin-bottom: 1rem;
+  flex-grow: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.dark .movie-summary {
+  color: #cbd5e1;
+}
+
+.streaming-platforms {
+  margin-top: auto;
+  margin-bottom: 1rem;
+}
+
+.streaming-platforms p {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin-bottom: 0.5rem;
+}
+
+.dark .streaming-platforms p {
+  color: #94a3b8;
+}
+
+.platform-badges {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.platform-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.platform-badge:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Netflix Brand Colors */
+.platform-netflix {
+  background: linear-gradient(135deg, #e50914, #b20710);
+}
+
+.platform-netflix:hover {
+  background: linear-gradient(135deg, #f40612, #e50914);
+}
+
+/* Amazon Prime Brand Colors */
+.platform-prime {
+  background: linear-gradient(135deg, #00a8e1, #0073a8);
+}
+
+.platform-prime:hover {
+  background: linear-gradient(135deg, #1bb8f1, #00a8e1);
+}
+
+/* Hulu Brand Colors */
+.platform-hulu {
+  background: linear-gradient(135deg, #1ce783, #17d174);
+}
+
+.platform-hulu:hover {
+  background: linear-gradient(135deg, #2ef793, #1ce783);
+}
+
+/* Disney+ Brand Colors */
+.platform-disney {
+  background: linear-gradient(135deg, #113ccf, #0e2f9e);
+}
+
+.platform-disney:hover {
+  background: linear-gradient(135deg, #2149df, #113ccf);
+}
+
+/* HBO Max Brand Colors */
+.platform-hbo {
+  background: linear-gradient(135deg, #7b2cbf, #5a1e8a);
+}
+
+.platform-hbo:hover {
+  background: linear-gradient(135deg, #8b3ccf, #7b2cbf);
+}
+
+/* Apple TV+ Brand Colors */
+.platform-apple {
+  background: linear-gradient(135deg, #000000, #333333);
+}
+
+.platform-apple:hover {
+  background: linear-gradient(135deg, #1a1a1a, #000000);
+}
+
+/* Paramount+ Brand Colors */
+.platform-paramount {
+  background: linear-gradient(135deg, #0064ff, #004cc7);
+}
+
+.platform-paramount:hover {
+  background: linear-gradient(135deg, #1a74ff, #0064ff);
+}
+
+/* Peacock Brand Colors */
+.platform-peacock {
+  background: linear-gradient(135deg, #7b68ee, #6a5acd);
+}
+
+.platform-peacock:hover {
+  background: linear-gradient(135deg, #8b78fe, #7b68ee);
+}
+
+/* Generic/Unknown Platform */
+.platform-badge:not([class*="platform-"]) {
+  background: linear-gradient(135deg, #6b7280, #4b5563);
+}
+
+.platform-badge:not([class*="platform-"]):hover {
+  background: linear-gradient(135deg, #7b8390, #6b7280);
+}
+
+.wiki-button {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: #6366f1;
+  color: white;
+  border-radius: 0.25rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.dark .wiki-button {
+  background-color: #818cf8;
+}
+
+.wiki-button:hover {
+  background-color: #4f46e5;
+  transform: translateY(-2px);
+}
+
+.dark .wiki-button:hover {
+  background-color: #6366f1;
+}
+
+.ai-source-badge {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  background-color: rgba(99, 102, 241, 0.9);
+  color: white;
+  border-radius: 0.25rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  z-index: 10;
+}
+
+.dark .ai-source-badge {
+  background-color: rgba(129, 140, 248, 0.9);
+}
+
+/* Trailer modal */
+.trailer-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fade-in 0.3s ease-out;
+}
+
+.trailer-content {
+  position: relative;
+  width: 90%;
+  max-width: 900px;
+  aspect-ratio: 16 / 9;
+}
+
+.close-trailer {
+  position: absolute;
+  top: -2.5rem;
+  right: 0;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+.trailer-content iframe {
+  width: 100%;
+  height: 100%;
+  border-radius: 0.5rem;
+}
+
+@keyframes slide-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}

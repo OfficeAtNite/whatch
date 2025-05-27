@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Whatch? - Movie Recommendations by Vibe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #6366f1;
+      --primary-color-dark: #818cf8;
+      --bg-color-light: #f8fafc;
+      --bg-color-dark: #0f172a;
+      --text-color-light: #1e293b;
+      --text-color-dark: #f8fafc;
+      --card-bg-light: #ffffff;
+      --card-bg-dark: #1e293b;
+      
+      /* Streaming service colors */
+      --netflix-color: #E50914;
+      --prime-color: #00A8E1;
+      --hulu-color: #3DBB3D;
+      --disney-color: #113CCF;
+      --hbo-color: #5822B4;
+      --apple-color: #A2AAAD;
+      --paramount-color: #0064FF;
+      --peacock-color: #110F5E;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background-color: var(--bg-color-dark);
+      color: var(--text-color-dark);
+      min-height: 100vh;
+    }
+
+    body.light {
+      background-color: var(--bg-color-light);
+      color: var(--text-color-light);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    .video-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .youtube-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    
+    .youtube-background iframe {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100vw;
+      height: 100vh;
+      transform: translate(-50%, -50%) scale(1.2);
+      filter: blur(3px);
+      pointer-events: none;
+    }
+
+    .tv-static-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      opacity: 0.05;
+      pointer-events: none;
+      animation: tv-static 0.5s infinite;
+      z-index: 1;
+    }
+
+    .darkening-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      z-index: 2;
+    }
+
+    .theme-toggle {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      background-color: rgba(30, 41, 59, 0.4);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 100;
+      transition: all 0.3s ease;
+    }
+
+    .theme-toggle svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      color: white;
+    }
+
+    .search-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem 0;
+    }
+
+    .search-form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .app-title {
+      font-size: 4rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      color: white;
+      text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .title-accent {
+      color: var(--primary-color-dark);
+    }
+
+    .input-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 1rem 3rem 1rem 1.5rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 9999px;
+      background-color: rgba(30, 41, 59, 0.8);
+      color: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2), 0 0 20px rgba(129, 140, 248, 0.3);
+    }
+
+    .search-input:focus {
+      outline: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), 0 0 25px rgba(129, 140, 248, 0.5);
+    }
+
+    .search-button {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-color-dark);
+    }
+
+    .search-button svg {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+
+    .search-hint {
+      margin-top: 1rem;
+      color: rgba(255, 255, 255, 0.7);
+      text-align: center;
+      font-size: 0.9rem;
+      max-width: 500px;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    .results-container {
+      padding: 2rem 0;
+      display: none;
+    }
+
+    .results-title {
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      color: white;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+
+    .movie-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 1rem;
+    }
+
+    .movie-card {
+      position: relative;
+      background-color: rgba(30, 41, 59, 0.8);
+      border-radius: 0.75rem;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2), 0 0 15px rgba(0, 0, 0, 0.1);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      animation: slide-up 0.5s ease-out;
+    }
+
+    .movie-poster-container {
+      position: relative;
+      width: 100%;
+      padding-top: 150%;
+      overflow: hidden;
+    }
+
+    .movie-poster {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .movie-poster.has-trailer:hover {
+      transform: scale(1.05);
+    }
+
+    .play-button-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.3);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      cursor: pointer;
+    }
+
+    .play-button-overlay:hover {
+      opacity: 1;
+    }
+
+    .play-button-overlay svg {
+      width: 4rem;
+      height: 4rem;
+      color: white;
+      filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.5));
+    }
+
+    .movie-info {
+      padding: 1.25rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .movie-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 0 0 0.25rem 0;
+      color: white;
+    }
+
+    .movie-year {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      margin: 0 0 0.75rem 0;
+    }
+
+    .movie-summary {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: #cbd5e1;
+      margin-bottom: 1rem;
+      flex-grow: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .streaming-platforms {
+      margin-top: auto;
+      margin-bottom: 1rem;
+    }
+
+    .streaming-platforms p {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-bottom: 0.5rem;
+    }
+
+    .platform-icons {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .platform-icon {
+      width: 1.75rem;
+      height: 1.75rem;
+      border-radius: 0.25rem;
+      object-fit: contain;
+      transition: transform 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: white;
+      font-size: 0.8rem;
+    }
+
+    .platform-icon:hover {
+      transform: scale(1.1);
+    }
+
+    /* Streaming platform specific styles */
+    .platform-netflix {
+      background-color: var(--netflix-color);
+    }
+
+    .platform-prime {
+      background-color: var(--prime-color);
+    }
+
+    .platform-hulu {
+      background-color: var(--hulu-color);
+    }
+
+    .platform-disney {
+      background-color: var(--disney-color);
+    }
+
+    .platform-hbo {
+      background-color: var(--hbo-color);
+    }
+
+    .platform-apple {
+      background-color: var(--apple-color);
+    }
+
+    .platform-paramount {
+      background-color: var(--paramount-color);
+    }
+
+    .platform-peacock {
+      background-color: var(--peacock-color);
+    }
+
+    .wiki-button {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background-color: var(--primary-color-dark);
+      color: white;
+      border-radius: 0.25rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .wiki-button:hover {
+      background-color: var(--primary-color);
+      transform: translateY(-2px);
+    }
+
+    .ai-source-badge {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      padding: 0.25rem 0.5rem;
+      background-color: rgba(129, 140, 248, 0.9);
+      color: white;
+      border-radius: 0.25rem;
+      font-size: 0.7rem;
+      font-weight: 500;
+      z-index: 10;
+    }
+
+    .loader-container {
+      display: flex;
+      justify-content: center;
+      display: none;
+    }
+
+    .loader {
+      display: inline-block;
+      width: 80px;
+      height: 80px;
+      position: relative;
+    }
+
+    .loader:after {
+      content: " ";
+      display: block;
+      border-radius: 50%;
+      width: 0;
+      height: 0;
+      margin: 8px;
+      box-sizing: border-box;
+      border: 32px solid var(--primary-color-dark);
+      border-color: var(--primary-color-dark) transparent var(--primary-color-dark) transparent;
+      animation: loader 1.2s infinite;
+    }
+
+    /* Trailer modal/lightbox */
+    .trailer-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .trailer-modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .trailer-content {
+      position: relative;
+      width: 90%;
+      max-width: 900px;
+      aspect-ratio: 16 / 9;
+    }
+
+    .close-trailer {
+      position: absolute;
+      top: -2.5rem;
+      right: 0;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 2rem;
+      cursor: pointer;
+      z-index: 1001;
+    }
+
+    .trailer-content iframe {
+      width: 100%;
+      height: 100%;
+      border-radius: 0.5rem;
+      border: none;
+    }
+
+    .error-message {
+      color: #ef4444;
+      text-align: center;
+      margin-top: 1rem;
+      display: none;
+    }
+    
+    /* Filters styling */
+    .filters-container {
+      background-color: rgba(30, 41, 59, 0.7);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: flex-end;
+    }
+    
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-width: 150px;
+    }
+    
+    .filter-group label {
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+      color: #e2e8f0;
+    }
+    
+    .filter-select {
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+      background-color: rgba(15, 23, 42, 0.8);
+      color: white;
+      border: 1px solid rgba(129, 140, 248, 0.3);
+      outline: none;
+    }
+    
+    .filter-select:focus {
+      border-color: var(--primary-color-dark);
+      box-shadow: 0 0 0 2px rgba(129, 140, 248, 0.2);
+    }
+    
+    .filter-button {
+      padding: 0.5rem 1rem;
+      background-color: var(--primary-color-dark);
+      color: white;
+      border: none;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      height: 38px;
+    }
+    
+    .filter-button:hover {
+      background-color: var(--primary-color);
+      transform: translateY(-2px);
+    }
+    
+    #reset-filters {
+      background-color: rgba(100, 116, 139, 0.8);
+    }
+    
+    #reset-filters:hover {
+      background-color: rgba(100, 116, 139, 1);
+    }
+
+    @keyframes loader {
+      0% {
+        transform: rotate(0);
+        animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+      }
+      50% {
+        transform: rotate(180deg);
+        animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes tv-static {
+      0%, 100% { opacity: 0.05; }
+      50% { opacity: 0.1; }
+    }
+
+    @keyframes slide-up {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .movie-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.5rem;
+      }
+      
+      .app-title {
+        font-size: 3rem;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .movie-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      
+      .app-title {
+        font-size: 2.5rem;
+      }
+      
+      .search-input {
+        padding: 0.75rem 2.5rem 0.75rem 1rem;
+        font-size: 0.9rem;
+      }
+      
+      .search-button svg {
+        width: 1.25rem;
+        height: 1.25rem;
+      }
+    }
+  </style>
+</head>
+<body class="dark">
+  <div class="video-background">
+    <div class="youtube-background">
+      <iframe
+        id="youtube-background"
+        src="https://www.youtube.com/embed/gsRjfgf7fd8?autoplay=1&mute=1&controls=0&loop=1&playlist=gsRjfgf7fd8&showinfo=0&rel=0&enablejsapi=1"
+        frameborder="0"
+        allowfullscreen
+      ></iframe>
+    </div>
+    <div class="tv-static-overlay"></div>
+    <div class="darkening-overlay"></div>
+  </div>
+
+  <button class="theme-toggle" id="theme-toggle" aria-label="Switch to light mode">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </button>
+
+  <div class="container">
+    <div class="search-container" id="search-container">
+      <form class="search-form" id="search-form">
+        <h1 class="app-title">
+          Whatch<span class="title-accent">?</span>
+        </h1>
+        
+        <div class="input-wrapper">
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Enter a movie vibe (e.g., 'adrenaline-pumping sci-fi heist')"
+            class="search-input"
+            aria-label="Movie vibe search"
+          />
+          
+          <button 
+            type="submit" 
+            class="search-button"
+            id="search-button"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </button>
+        </div>
+        
+        <p class="search-hint">
+          Tell us what you're in the mood for and we'll find the perfect movie
+        </p>
+        
+        <div class="error-message" id="error-message"></div>
+      </form>
+    </div>
+
+    <div class="loader-container" id="loader-container">
+      <div class="loader"></div>
+    </div>
+
+    <div class="results-container" id="results-container">
+      <h2 class="results-title">Recommended Movies</h2>
+      
+      <div class="filters-container">
+        <div class="filter-group">
+          <label for="kid-friendly">Kid-Friendly:</label>
+          <select id="kid-friendly" class="filter-select">
+            <option value="all">All Movies</option>
+            <option value="yes">Kid-Friendly Only</option>
+            <option value="no">Adult Content</option>
+          </select>
+        </div>
+        
+        <div class="filter-group">
+          <label for="streaming-service">Streaming Service:</label>
+          <select id="streaming-service" class="filter-select">
+            <option value="all">All Services</option>
+            <option value="netflix">Netflix</option>
+            <option value="prime">Prime Video</option>
+            <option value="hulu">Hulu</option>
+            <option value="disney">Disney+</option>
+            <option value="hbo">HBO Max</option>
+            <option value="apple">Apple TV+</option>
+            <option value="paramount">Paramount+</option>
+            <option value="peacock">Peacock</option>
+          </select>
+        </div>
+        
+        <div class="filter-group">
+          <label for="decade">Decade:</label>
+          <select id="decade" class="filter-select">
+            <option value="all">All Decades</option>
+            <option value="2020">2020s</option>
+            <option value="2010">2010s</option>
+            <option value="2000">2000s</option>
+            <option value="1990">1990s</option>
+            <option value="1980">1980s</option>
+            <option value="1970">1970s</option>
+            <option value="older">Older</option>
+          </select>
+        </div>
+        
+        <button id="apply-filters" class="filter-button">Apply Filters</button>
+        <button id="reset-filters" class="filter-button">Reset</button>
+      </div>
+      
+      <div class="movie-grid" id="movie-grid">
+        <!-- Movie cards will be inserted here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Trailer Modal/Lightbox -->
+  <div class="trailer-modal" id="trailer-modal">
+    <div class="trailer-content">
+      <button class="close-trailer" id="close-trailer">×</button>
+      <iframe id="trailer-iframe" title="Movie Trailer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <script>
+    // API Keys
+    const OPENROUTER_API_KEY = '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';
+    const TMDB_API_KEY = '7c7b986d6410043f1e8f85f10c0167ee';
+    
+    // Base URLs for API requests
+    const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
+    const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
+    const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
+    
+    // Theme toggle functionality
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    
+    // Check for saved theme preference
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    body.className = savedTheme;
+    
+    themeToggle.addEventListener('click', () => {
+      const newTheme = body.className === 'dark' ? 'light' : 'dark';
+      body.className = newTheme;
+      localStorage.setItem('theme', newTheme);
+    });
+    
+    // Search form functionality
+    const searchForm = document.getElementById('search-form');
+    const searchInput = document.getElementById('search-input');
+    const searchContainer = document.getElementById('search-container');
+    const loaderContainer = document.getElementById('loader-container');
+    const resultsContainer = document.getElementById('results-container');
+    const movieGrid = document.getElementById('movie-grid');
+    const errorMessage = document.getElementById('error-message');
+    
+    // Filter elements
+    const kidFriendlyFilter = document.getElementById('kid-friendly');
+    const streamingServiceFilter = document.getElementById('streaming-service');
+    const decadeFilter = document.getElementById('decade');
+    const applyFiltersButton = document.getElementById('apply-filters');
+    const resetFiltersButton = document.getElementById('reset-filters');
+    
+    // Store all movies for filtering
+    let allMovies = [];
+    
+    // Trailer modal functionality
+    const trailerModal = document.getElementById('trailer-modal');
+    const trailerIframe = document.getElementById('trailer-iframe');
+    const closeTrailer = document.getElementById('close-trailer');
+    
+    // Function to open trailer modal
+    function openTrailerModal(trailerUrl) {
+      // Extract YouTube video ID
+      const videoIdMatch = trailerUrl.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+      if (videoIdMatch) {
+        const videoId = videoIdMatch[1];
+        // Set iframe src with autoplay
+        trailerIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+        // Show modal
+        trailerModal.classList.add('active');
+        // Add event listener to close when clicking outside
+        document.addEventListener('click', closeOnClickOutside);
+      }
+    }
+    
+    // Function to close trailer modal
+    function closeTrailerModal() {
+      trailerModal.classList.remove('active');
+      // Stop video playback by clearing the iframe src
+      trailerIframe.src = '';
+      // Remove event listener
+      document.removeEventListener('click', closeOnClickOutside);
+    }
+    
+    // Close modal when clicking outside the content
+    function closeOnClickOutside(e) {
+      if (e.target === trailerModal) {
+        closeTrailerModal();
+      }
+    }
+    
+    // Close button event listener
+    closeTrailer.addEventListener('click', closeTrailerModal);
+    
+    // Close modal with Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && trailerModal.classList.contains('active')) {
+        closeTrailerModal();
+      }
+    });
+    
+    // Function to fetch movie recommendations from GPT via OpenRouter
+    async function fetchGptRecommendations(prompt) {
+      try {
+        const response = await fetch(OPENROUTER_URL, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            model: 'openai/gpt-4o',
+            messages: [
+              {
+                role: 'system',
+                content: 'You are a movie recommendation expert. Provide exactly 5 movie recommendations based on the user\'s description. For each movie, include the title, year, and a brief summary. Format your response as a JSON array with objects containing "title", "year", and "summary" fields.'
+              },
+              {
+                role: 'user',
+                content: `Recommend movies with this vibe: ${prompt}`
+              }
+            ],
+            response_format: { type: 'json_object' }
+          })
+        });
+        
+        if (!response.ok) {
+          throw new Error(`GPT API error: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        const recommendations = JSON.parse(data.choices[0].message.content);
+        
+        return recommendations.movies.map(movie => ({
+          ...movie,
+          source: 'GPT'
+        }));
+      } catch (error) {
+        console.error('Error fetching GPT recommendations:', error);
+        return [];
+      }
+    }
+    
+    // Function to fetch movie recommendations from Claude via OpenRouter
+    async function fetchClaudeRecommendations(prompt) {
+      try {
+        const response = await fetch(OPENROUTER_URL, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            model: 'anthropic/claude-3-opus',
+            messages: [
+              {
+                role: 'system',
+                content: 'You are a movie recommendation expert. Provide exactly 5 movie recommendations based on the user\'s description. For each movie, include the title, year, and a brief summary. Format your response as a JSON array with objects containing "title", "year", and "summary" fields.'
+              },
+              {
+                role: 'user',
+                content: `Recommend movies with this vibe: ${prompt}`
+              }
+            ],
+            response_format: { type: 'json_object' }
+          })
+        });
+        
+        if (!response.ok) {
+          throw new Error(`Claude API error: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        const recommendations = JSON.parse(data.choices[0].message.content);
+        
+        return recommendations.movies.map(movie => ({
+          ...movie,
+          source: 'Claude'
+        }));
+      } catch (error) {
+        console.error('Error fetching Claude recommendations:', error);
+        return [];
+      }
+    }
+    
+    // Function to search for a movie by title using TMDB API
+    async function searchMovie(title) {
+      try {
+        const response = await fetch(`${TMDB_BASE_URL}/search/movie?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(title)}&include_adult=false&language=en-US&page=1`);
+        
+        if (!response.ok) {
+          throw new Error(`TMDB API error: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        return data.results;
+      } catch (error) {
+        console.error('Error searching for movie:', error);
+        return [];
+      }
+    }
+    
+    // Function to get movie videos from TMDB API
+    async function getMovieVideos(movieId) {
+      try {
+        const response = await fetch(`${TMDB_BASE_URL}/movie/${movieId}/videos?api_key=${TMDB_API_KEY}&language=en-US`);
+        
+        if (!response.ok) {
+          throw new Error(`TMDB API error: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        return data.results;
+      } catch (error) {
+        console.error('Error getting movie videos:', error);
+        return [];
+      }
+    }
+    
+    // Function to get streaming availability (mock data for now)
+    function getStreamingAvailability() {
+      // This is a placeholder - in a real app, you'd integrate with JustWatch or similar
+      // For now, return random mock data
+      const platforms = [
+        { id: 'netflix', name: 'Netflix' },
+        { id: 'prime', name: 'Prime' },
+        { id: 'hulu', name: 'Hulu' },
+        { id: 'disney', name: 'Disney+' },
+        { id: 'hbo', name: 'HBO Max' },
+        { id: 'apple', name: 'Apple TV+' },
+        { id: 'paramount', name: 'Paramount+' },
+        { id: 'peacock', name: 'Peacock' }
+      ];
+      
+      // Return 1-3 random platforms
+      return platforms
+        .sort(() => Math.random() - 0.5)
+        .slice(0, Math.floor(Math.random() * 3) + 1);
+    }
+    
+    // Function to fetch complete movie details from title
+    async function fetchMovieDetails(movie) {
+      try {
+        // Search for the movie by title
+        const searchResults = await searchMovie(movie.title);
+        
+        if (searchResults.length === 0) {
+          return {
+            title: movie.title,
+            year: movie.year || 'Unknown',
+            summary: movie.summary || 'No additional details found',
+            posterUrl: null,
+            trailerUrl: null,
+            wikiUrl: `https://en.wikipedia.org/wiki/${encodeURIComponent(movie.title)}`,
+            streamingPlatforms: getStreamingAvailability(),
+            source: movie.source
+          };
+        }
+        
+        // Get the first (most relevant) result
+        const movieResult = searchResults[0];
+        
+        // Get videos to find trailer
+        const videos = await getMovieVideos(movieResult.id);
+        const trailer = videos.find(video => video.type === 'Trailer' && video.site === 'YouTube');
+        
+        // Get streaming availability
+        const streamingPlatforms = getStreamingAvailability();
+        
+        // Construct Wikipedia URL
+        const wikiUrl = `https://en.wikipedia.org/wiki/${encodeURIComponent(movieResult.title)}`;
+        
+        return {
+          id: movieResult.id,
+          title: movieResult.title,
+          posterUrl: movieResult.poster_path ? `${TMDB_IMAGE_BASE_URL}${movieResult.poster_path}` : null,
+          year: movieResult.release_date ? movieResult.release_date.substring(0, 4) : movie.year || 'Unknown',
+          summary: movieResult.overview || movie.summary || 'No summary available',
+          trailerUrl: trailer ? `https://www.youtube.com/watch?v=${trailer.key}` : null,
+          wikiUrl,
+          streamingPlatforms,
+          source: movie.source
+        };
+      } catch (error) {
+        console.error('Error fetching movie details:', error);
+        return {
+          title: movie.title,
+          year: movie.year || 'Unknown',
+          summary: movie.summary || 'Error fetching details',
+          posterUrl: null,
+          trailerUrl: null,
+          wikiUrl: `https://en.wikipedia.org/wiki/${encodeURIComponent(movie.title)}`,
+          streamingPlatforms: getStreamingAvailability(),
+          source: movie.source
+        };
+      }
+    }
+    
+    // Function to fetch all movie recommendations
+    async function fetchAllRecommendations(prompt) {
+      try {
+        // Fetch recommendations from GPT and Claude in parallel
+        const [gptResults, claudeResults] = await Promise.all([
+          fetchGptRecommendations(prompt),
+          fetchClaudeRecommendations(prompt)
+        ]);
+        
+        // Combine all results
+        const allRecommendations = [...gptResults, ...claudeResults];
+        
+        // Remove duplicates (same title)
+        const uniqueMovies = [];
+        const seenTitles = new Set();
+        
+        allRecommendations.forEach(movie => {
+          const normalizedTitle = movie.title.toLowerCase();
+          if (!seenTitles.has(normalizedTitle)) {
+            seenTitles.add(normalizedTitle);
+            uniqueMovies.push(movie);
+          }
+        });
+        
+        // Fetch details for each movie
+        const moviesWithDetails = await Promise.all(
+          uniqueMovies.map(movie => fetchMovieDetails(movie))
+        );
+        
+        return moviesWithDetails;
+      } catch (error) {
+        console.error('Error fetching all recommendations:', error);
+        throw error;
+      }
+    }
+    
+    searchForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const query = searchInput.value.trim();
+      if (!query) return;
+      
+      // Reset error message
+      errorMessage.style.display = 'none';
+      errorMessage.textContent = '';
+      
+      // Update UI for searching state
+      searchContainer.style.minHeight = 'auto';
+      searchContainer.style.padding = '2rem 0 0';
+      loaderContainer.style.display = 'flex';
+      resultsContainer.style.display = 'none';
+      
+      try {
+        // Fetch movie recommendations
+        const movies = await fetchAllRecommendations(query);
+        
+        // Hide loader and show results
+        loaderContainer.style.display = 'none';
+        resultsContainer.style.display = 'block';
+        
+        // Clear previous results
+        movieGrid.innerHTML = '';
+        
+        // Store all movies for filtering
+        allMovies = movies;
+        
+        // Create movie cards
+        displayMovies(allMovies);
+      } catch (error) {
+        // Show error message
+        loaderContainer.style.display = 'none';
+        errorMessage.textContent = 'An error occurred while fetching recommendations. Please try again.';
+        errorMessage.style.display = 'block';
+        console.error('Error in search submission:', error);
+      }
+    });
+    
+    // Function to create a movie card
+    function createMovieCard(movie) {
+      const card = document.createElement('div');
+      card.className = 'movie-card';
+      
+      // AI source badge
+      if (movie.source) {
+        const sourceBadge = document.createElement('div');
+        sourceBadge.className = 'ai-source-badge';
+        sourceBadge.textContent = `Recommended by ${movie.source}`;
+        card.appendChild(sourceBadge);
+      }
+      
+      // Poster container
+      const posterContainer = document.createElement('div');
+      posterContainer.className = 'movie-poster-container';
+      
+      const poster = document.createElement('img');
+      poster.className = `movie-poster ${movie.trailerUrl ? 'has-trailer' : ''}`;
+      poster.src = movie.posterUrl || 'https://placehold.co/300x450/333333/FFFFFF?text=Movie+Poster';
+      poster.alt = `${movie.title} poster`;
+      posterContainer.appendChild(poster);
+      
+      // Play button overlay if trailer available
+      if (movie.trailerUrl) {
+        const playButton = document.createElement('div');
+        playButton.className = 'play-button-overlay';
+        playButton.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8 5v14l11-7z" />
+          </svg>
+        `;
+        
+        // Open trailer in modal when clicked
+        playButton.addEventListener('click', () => {
+          openTrailerModal(movie.trailerUrl);
+        });
+        
+        posterContainer.appendChild(playButton);
+      }
+      
+      card.appendChild(posterContainer);
+      
+      // Movie info
+      const infoContainer = document.createElement('div');
+      infoContainer.className = 'movie-info';
+      
+      const title = document.createElement('h3');
+      title.className = 'movie-title';
+      title.textContent = movie.title;
+      infoContainer.appendChild(title);
+      
+      const year = document.createElement('p');
+      year.className = 'movie-year';
+      year.textContent = movie.year;
+      infoContainer.appendChild(year);
+      
+      const summary = document.createElement('p');
+      summary.className = 'movie-summary';
+      summary.textContent = movie.summary;
+      infoContainer.appendChild(summary);
+      
+      // Streaming platforms
+      if (movie.streamingPlatforms && movie.streamingPlatforms.length > 0) {
+        const platformsContainer = document.createElement('div');
+        platformsContainer.className = 'streaming-platforms';
+        
+        const platformsTitle = document.createElement('p');
+        platformsTitle.textContent = 'Available on:';
+        platformsContainer.appendChild(platformsTitle);
+        
+        const platformIcons = document.createElement('div');
+        platformIcons.className = 'platform-icons';
+        
+        movie.streamingPlatforms.forEach(platform => {
+          const icon = document.createElement('div');
+          icon.className = `platform-icon platform-${platform.id.toLowerCase()}`;
+          icon.textContent = platform.name.charAt(0);
+          icon.title = platform.name;
+          platformIcons.appendChild(icon);
+        });
+        
+        platformsContainer.appendChild(platformIcons);
+        infoContainer.appendChild(platformsContainer);
+      }
+      
+      // Wiki button
+      if (movie.wikiUrl) {
+        const wikiButton = document.createElement('a');
+        wikiButton.className = 'wiki-button';
+        wikiButton.href = movie.wikiUrl;
+        wikiButton.target = '_blank';
+        wikiButton.rel = 'noopener noreferrer';
+        wikiButton.textContent = 'Wiki';
+        infoContainer.appendChild(wikiButton);
+      }
+      
+      card.appendChild(infoContainer);
+      
+      return card;
+    }
+    
+    // Function to display movies with filters
+    function displayMovies(movies) {
+      // Clear previous results
+      movieGrid.innerHTML = '';
+      
+      // Get filter values
+      const kidFriendly = kidFriendlyFilter.value;
+      const streamingService = streamingServiceFilter.value;
+      const decade = decadeFilter.value;
+      
+      // Filter movies
+      const filteredMovies = movies.filter(movie => {
+        // Kid-friendly filter (using year as a proxy - newer movies with PG/G rating tend to be more kid-friendly)
+        if (kidFriendly !== 'all') {
+          const isKidFriendly = parseInt(movie.year) >= 2000 && !movie.summary.toLowerCase().includes('violence') &&
+                               !movie.summary.toLowerCase().includes('horror') &&
+                               !movie.summary.toLowerCase().includes('thriller');
+          
+          if (kidFriendly === 'yes' && !isKidFriendly) return false;
+          if (kidFriendly === 'no' && isKidFriendly) return false;
+        }
+        
+        // Streaming service filter
+        if (streamingService !== 'all') {
+          const hasStreamingService = movie.streamingPlatforms.some(
+            platform => platform.id.toLowerCase() === streamingService.toLowerCase()
+          );
+          if (!hasStreamingService) return false;
+        }
+        
+        // Decade filter
+        if (decade !== 'all') {
+          if (decade === 'older') {
+            if (parseInt(movie.year) >= 1970) return false;
+          } else {
+            const decadeStart = parseInt(decade);
+            const decadeEnd = decadeStart + 9;
+            const movieYear = parseInt(movie.year);
+            if (movieYear < decadeStart || movieYear > decadeEnd) return false;
+          }
+        }
+        
+        return true;
+      });
+      
+      // Display filtered movies
+      if (filteredMovies.length === 0) {
+        const noResults = document.createElement('div');
+        noResults.className = 'no-results';
+        noResults.innerHTML = `
+          <h3>No movies match your filters</h3>
+          <p>Try adjusting your filter criteria or click "Reset" to see all movies.</p>
+        `;
+        movieGrid.appendChild(noResults);
+      } else {
+        filteredMovies.forEach(movie => {
+          const movieCard = createMovieCard(movie);
+          movieGrid.appendChild(movieCard);
+        });
+      }
+    }
+    
+    // Event listeners for filters
+    applyFiltersButton.addEventListener('click', () => {
+      displayMovies(allMovies);
+    });
+    
+    resetFiltersButton.addEventListener('click', () => {
+      kidFriendlyFilter.value = 'all';
+      streamingServiceFilter.value = 'all';
+      decadeFilter.value = 'all';
+      displayMovies(allMovies);
+    });
+  </script>
+</body>
+</html>

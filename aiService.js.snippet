@@ -1,0 +1,179 @@
+import axios from 'axios';
+
+// API keys
+const OPENROUTER_API_KEY = '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';
+const GEMINI_API_KEY = '7c7b986d6410043f1e8f85f10c0167ee'; // Note: This appears to be the TMDB key in the task description
+
+// Base URLs for API requests
+const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
+const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+
+/**
+ * Fetch movie recommendations from GPT via OpenRouter
+ * @param {string} prompt - User's movie vibe description
+ * @returns {Promise<Array>} - Array of movie recommendations
+ */
+export const fetchGptRecommendations = async (prompt) => {
+  try {
+    const response = await axios.post(
+      OPENROUTER_URL,
+      {
+        model: 'openai/gpt-4o',
+        messages: [
+          {
+            role: 'system',
+            content: 'You are a movie recommendation expert. Provide exactly 5 movie recommendations based on the user\'s description. For each movie, include the title, year, and a brief summary. Format your response as a JSON array with objects containing "title", "year", and "summary" fields.'
+          },
+          {
+            role: 'user',
+            content: `Recommend movies with this vibe: ${prompt}`
+          }
+        ],
+        response_format: { type: 'json_object' }
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    const recommendations = JSON.parse(response.data.choices[0].message.content);
+    return recommendations.movies.map(movie => ({
+      ...movie,
+      source: 'GPT'
+    }));
+  } catch (error) {
+    console.error('Error fetching GPT recommendations:', error);
+    return [];
+  }
+};
+
+/**
+ * Fetch movie recommendations from Claude via OpenRouter
+ * @param {string} prompt - User's movie vibe description
+ * @returns {Promise<Array>} - Array of movie recommendations
+ */
+export const fetchClaudeRecommendations = async (prompt) => {
+  try {
+    const response = await axios.post(
+      OPENROUTER_URL,
+      {
+        model: 'anthropic/claude-3-opus',
+        messages: [
+          {
+            role: 'system',
+            content: 'You are a movie recommendation expert. Provide exactly 5 movie recommendations based on the user\'s description. For each movie, include the title, year, and a brief summary. Format your response as a JSON array with objects containing "title", "year", and "summary" fields.'
+          },
+          {
+            role: 'user',
+            content: `Recommend movies with this vibe: ${prompt}`
+          }
+        ],
+        response_format: { type: 'json_object' }
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    const recommendations = JSON.parse(response.data.choices[0].message.content);
+    return recommendations.movies.map(movie => ({
+      ...movie,
+      source: 'Claude'
+    }));
+  } catch (error) {
+    console.error('Error fetching Claude recommendations:', error);
+    return [];
+  }
+};
+
+/**
+ * Fetch movie recommendations from Gemini
+ * @param {string} prompt - User's movie vibe description
+ * @returns {Promise<Array>} - Array of movie recommendations
+ */
+export const fetchGeminiRecommendations = async (prompt) => {
+  try {
+    const response = await axios.post(
+      `${GEMINI_URL}?key=${GEMINI_API_KEY}`,
+      {
+        contents: [
+          {
+            parts: [
+              {
+                text: `You are a movie recommendation expert. Provide exactly 5 movie recommendations based on this vibe: ${prompt}. Format your response as a JSON array with objects containing "title", "year", and "summary" fields.`
+              }
+            ]
+          }
+        ],
+        generationConfig: {
+          temperature: 0.7,
+          topK: 40,
+          topP: 0.95,
+          maxOutputTokens: 1024
+        }
+      }
+    );
+
+    // Extract the text response from Gemini
+    const textResponse = response.data.candidates[0].content.parts[0].text;
+    
+    // Extract JSON from the response (Gemini might wrap it in markdown code blocks)
+    const jsonMatch = textResponse.match(/```json\n([\s\S]*?)\n```/) || 
+                      textResponse.match(/```\n([\s\S]*?)\n```/) || 
+                      [null, textResponse];
+    
+    const jsonString = jsonMatch[1] || textResponse;
+    const recommendations = JSON.parse(jsonString);
+    
+    return recommendations.movies.map(movie => ({
+      ...movie,
+      source: 'Gemini'
+    }));
+  } catch (error) {
+    console.error('Error fetching Gemini recommendations:', error);
+    return [];
+  }
+};
+
+/**
+ * Fetch movie recommendations from all AI models and merge results
+ * @param {string} prompt - User's movie vibe description
+ * @returns {Promise<Array>} - Array of movie recommendations from all sources
+ */
+export const fetchMovieRecommendations = async (prompt) => {
+  try {
+    // Fetch recommendations from all three models in parallel
+    const [gptResults, claudeResults, geminiResults] = await Promise.all([
+      fetchGptRecommendations(prompt),
+      fetchClaudeRecommendations(prompt),
+      fetchGeminiRecommendations(prompt)
+    ]);
+
+    // Combine all results
+    const allRecommendations = [...gptResults, ...claudeResults, ...geminiResults];
+    
+    // Remove duplicates (same title)
+    const uniqueMovies = [];
+    const seenTitles = new Set();
+    
+    allRecommendations.forEach(movie => {
+      const normalizedTitle = movie.title.toLowerCase();
+      if (!seenTitles.has(normalizedTitle)) {
+        seenTitles.add(normalizedTitle);
+        uniqueMovies.push(movie);
+      }
+    });
+    
+    // Sort by relevance (for now, just randomize as a placeholder)
+    return uniqueMovies.sort(() => Math.random() - 0.5);
+  } catch (error) {
+    console.error('Error fetching movie recommendations:', error);
+    return [];
+  }
+};

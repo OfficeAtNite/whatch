@@ -1,0 +1,39 @@
+import React, { useEffect, useRef } from 'react';
+import './VideoBackground.css';
+
+// This component handles the fullscreen video background with TV static overlay
+const VideoBackground = ({ isSearching }) => {
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.playbackRate = 0.75; // Slow down video slightly for better background effect
+    }
+  }, []);
+
+  return (
+    <div className={`video-background ${isSearching ? 'searching' : ''}`}>
+      {/* Main background video */}
+      <video 
+        ref={videoRef}
+        autoPlay 
+        loop 
+        muted 
+        playsInline
+        className="fullscreen-video"
+      >
+        {/* We'll replace this with an actual movie-themed background video */}
+        <source src="/videos/cinema-background.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+      
+      {/* TV static overlay effect */}
+      <div className="tv-static-overlay"></div>
+      
+      {/* Darkening overlay that appears when searching */}
+      <div className="darkening-overlay"></div>
+    </div>
+  );
+};
+
+export default VideoBackground;
