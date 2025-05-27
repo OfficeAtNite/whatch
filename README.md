@@ -15,7 +15,7 @@ A beautiful, mobile-first movie recommendation website that uses multiple AI mod
 
 ## 🚀 Live Demo
 
-Visit the live application: [Triple Feature](https://officeatnite.github.io/whatch)
+Visit the live application: [Triple Feature](https://OfficeAtNite.github.io/whatch)
 
 ## 🛠️ Tech Stack
 
@@ -40,7 +40,7 @@ Before running this project, you'll need API keys for:
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/officeatnite/whatch.git
+   git clone https://github.com/OfficeAtNite/whatch.git
    cd whatch
    ```
 
@@ -122,9 +122,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📧 Contact
 
-**officeatnite** - [@officeatnite](https://github.com/officeatnite)
+**OfficeAtNite** - [@OfficeAtNite](https://github.com/OfficeAtNite)
 
-Project Link: [https://github.com/officeatnite/whatch](https://github.com/officeatnite/whatch)
+Project Link: [https://github.com/OfficeAtNite/whatch](https://github.com/OfficeAtNite/whatch)
 
 ---
 
