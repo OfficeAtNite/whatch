@@ -16,15 +16,15 @@ Click **New repository secret** for each of the following:
 
 **1. REACT_APP_OPENROUTER_API_KEY**
 - Name: `REACT_APP_OPENROUTER_API_KEY`
-- Value: `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`
+- Value: `[Your OpenRouter API key from your .env file]`
 
 **2. REACT_APP_TMDB_API_KEY**
 - Name: `REACT_APP_TMDB_API_KEY`
-- Value: `7c7b986d6410043f1e8f85f10c0167ee`
+- Value: `[Your TMDB API key from your .env file]`
 
 **3. REACT_APP_GEMINI_API_KEY** (Optional - currently has issues)
 - Name: `REACT_APP_GEMINI_API_KEY`
-- Value: `AIzaSyDummy_Replace_With_Your_Gemini_Key` (or your actual key)
+- Value: `[Your Gemini API key or leave as placeholder]`
 
 ### Step 3: Verify Secrets
 After adding all secrets, you should see them listed in the repository secrets section (values will be hidden for security).
