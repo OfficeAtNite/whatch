@@ -83,17 +83,20 @@ Before running this project, you'll need API keys for:
 
 ## 🚀 Deployment to GitHub Pages
 
-This project is configured for easy deployment to GitHub Pages:
+This project uses GitHub Actions for automatic deployment with secure API key management.
 
-1. **Build the project**
-   ```bash
-   npm run build
-   ```
+### For Repository Owners:
+1. **Set up GitHub Secrets** - Follow the detailed guide in [GITHUB_SECRETS_SETUP.md](GITHUB_SECRETS_SETUP.md)
+2. **Push to master branch** - GitHub Actions will automatically build and deploy
+3. **Monitor deployment** - Check the Actions tab for deployment status
 
-2. **Deploy to GitHub Pages**
-   ```bash
-   npm run deploy
-   ```
+### Manual Deployment (Local):
+If you prefer manual deployment:
+```bash
+npm run build
+npm run deploy
+```
+Note: Manual deployment won't include API keys for the live site.
 
 ## 🔒 Security
 
