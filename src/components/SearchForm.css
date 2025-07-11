@@ -19,41 +19,45 @@
   align-items: center;
   width: 100%;
   max-width: 600px;
+  margin: 0 auto;
 }
 
-.app-title {
-  font-size: 4rem;
-  font-weight: 700;
-  color: white;
-  text-align: center;
+.app-logo {
   margin-bottom: 2rem;
-  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   transition: all 0.5s ease;
+  display: flex;
+  justify-content: center;
 }
 
-.app-title.small {
-  font-size: 2rem;
+.app-logo.small {
   margin-bottom: 1rem;
 }
 
-.app-title.clickable {
+.app-logo.small .logo-image {
+  max-width: 200px;
+}
+
+.app-logo.clickable {
   cursor: pointer;
   transition: all 0.3s ease-in-out;
 }
 
-.app-title.clickable:hover {
+.app-logo.clickable:hover {
   transform: scale(1.05);
-  text-shadow: 0 0 20px rgba(129, 140, 248, 0.5);
+  filter: drop-shadow(0 0 20px rgba(129, 140, 248, 0.5));
 }
 
-.title-accent {
-  color: #818cf8;
+.logo-image {
+  max-width: 300px;
+  height: auto;
+  transition: all 0.5s ease;
 }
 
 .input-wrapper {
   width: 100%;
-  max-width: 600px;
   margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: center;
 }
 
 .search-input {
@@ -127,12 +131,12 @@
     padding: 1rem;
   }
   
-  .app-title {
-    font-size: 3rem;
+  .logo-image {
+    max-width: 250px;
   }
   
-  .app-title.small {
-    font-size: 1.5rem;
+  .app-logo.small .logo-image {
+    max-width: 150px;
   }
   
   .search-input {
@@ -148,12 +152,12 @@
 }
 
 @media (max-width: 480px) {
-  .app-title {
-    font-size: 2.5rem;
+  .logo-image {
+    max-width: 200px;
   }
   
-  .app-title.small {
-    font-size: 1.25rem;
+  .app-logo.small .logo-image {
+    max-width: 120px;
   }
   
   .search-input {

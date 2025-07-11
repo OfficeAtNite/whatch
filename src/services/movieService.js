@@ -12,17 +12,25 @@ const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
  * @param {string} title - Movie title to search for
  * @returns {Promise<Object>} - Movie search results
  */
-export const searchMovie = async (title) => {
+export const searchMovie = async (title, year = null) => {
   try {
-    const response = await axios.get(`${TMDB_BASE_URL}/search/movie`, {
-      params: {
-        api_key: TMDB_API_KEY,
-        query: title,
-        include_adult: false,
-        language: 'en-US',
-        page: 1
-      }
-    });
+    const params = {
+      api_key: TMDB_API_KEY,
+      query: title,
+      include_adult: false,
+      language: 'en-US',
+      page: 1
+    };
+    
+    // Add year parameter if provided
+    if (year) {
+      params.year = year;
+    }
+    
+    const response = await axios.get(`${TMDB_BASE_URL}/search/movie`, { params });
+    
+    // Log the number of results
+    console.log(`TMDB search for "${title}"${year ? ` (${year})` : ''} returned ${response.data.results.length} results`);
     
     return response.data.results;
   } catch (error) {
@@ -94,63 +102,137 @@ export const getStreamingAvailability = async (movieId) => {
 };
 
 /**
- * Fetch complete movie details from title
+ * Fetch complete movie details from title and optional year
  * @param {string} title - Movie title from AI recommendation
+ * @param {number|string} [year] - Optional year to filter results
  * @returns {Promise<Object>} - Complete movie details
  */
-export const fetchMovieDetails = async (title) => {
+// Cache for movie details to avoid redundant API calls
+const movieDetailsCache = new Map();
+
+// Function to create a promise with timeout
+const promiseWithTimeout = (promise, timeoutMs) => {
+  let timeoutId;
+  const timeoutPromise = new Promise((_, reject) => {
+    timeoutId = setTimeout(() => {
+      reject(new Error(`Request timed out after ${timeoutMs}ms`));
+    }, timeoutMs);
+  });
+
+  return Promise.race([
+    promise,
+    timeoutPromise
+  ]).finally(() => clearTimeout(timeoutId));
+};
+
+export const fetchMovieDetails = async (title, year = null) => {
   try {
-    // Search for the movie by title
-    const searchResults = await searchMovie(title);
+    // Create a cache key from title and year
+    const cacheKey = `${title}${year ? `-${year}` : ''}`;
+    
+    // Check if we already have this movie in cache
+    if (movieDetailsCache.has(cacheKey)) {
+      console.log(`Using cached details for: "${title}"${year ? ` (${year})` : ''}`);
+      return movieDetailsCache.get(cacheKey);
+    }
+    
+    console.log(`Fetching details for: "${title}"${year ? ` (${year})` : ''}`);
+    
+    // Search for the movie by title and year if provided with timeout
+    const searchResults = await promiseWithTimeout(
+      searchMovie(title, year),
+      5000 // 5 second timeout
+    );
     
     if (searchResults.length === 0) {
-      return {
+      console.log(`No TMDB results found for: ${title}`);
+      
+      // Create a more informative fallback with the original summary if available
+      const fallbackResult = {
         title,
         posterUrl: null,
-        year: 'Unknown',
-        summary: 'No additional details found',
+        year: year || 'Unknown',
+        // Use the original summary from AI if available, otherwise a better fallback message
+        summary: 'This movie was recommended based on your search criteria, but additional details could not be found in our database.',
         trailerUrl: null,
-        wikiUrl: `https://en.wikipedia.org/wiki/${encodeURIComponent(title)}`,
+        wikiUrl: `https://en.wikipedia.org/wiki/${encodeURIComponent(title.replace(/\s+/g, '_'))}${year ? `_(${year}_film)` : ''}`,
         streamingPlatforms: []
       };
+      
+      // Cache the fallback result
+      movieDetailsCache.set(cacheKey, fallbackResult);
+      return fallbackResult;
+    }
+    
+    // Filter results by year if provided
+    let filteredResults = searchResults;
+    if (year) {
+      const yearStr = String(year);
+      filteredResults = searchResults.filter(movie =>
+        movie.release_date && movie.release_date.startsWith(yearStr)
+      );
+      
+      // If no movies match the exact year, fall back to all results
+      if (filteredResults.length === 0) {
+        console.log(`No exact year match for ${title} (${year}), using best match`);
+        filteredResults = searchResults;
+      }
     }
     
     // Get the first (most relevant) result
-    const movie = searchResults[0];
+    const movie = filteredResults[0];
+    console.log(`Best match: ${movie.title} (${movie.release_date?.substring(0, 4) || 'Unknown'})`);
     
-    // Get additional details
-    const details = await getMovieDetails(movie.id);
+    // Fetch all additional data in parallel with Promise.allSettled to prevent one failure from blocking all
+    const [detailsResult, videosResult, streamingResult] = await Promise.allSettled([
+      promiseWithTimeout(getMovieDetails(movie.id), 4000),
+      promiseWithTimeout(getMovieVideos(movie.id), 4000),
+      promiseWithTimeout(getStreamingAvailability(movie.id), 3000)
+    ]);
     
-    // Get videos to find trailer
-    const videos = await getMovieVideos(movie.id);
+    // Extract results or use fallbacks
+    const details = detailsResult.status === 'fulfilled' ? detailsResult.value : null;
+    const videos = videosResult.status === 'fulfilled' ? videosResult.value : [];
+    const streamingPlatforms = streamingResult.status === 'fulfilled' ? streamingResult.value : [];
+    
+    // Find trailer if videos were successfully fetched
     const trailer = videos.find(video => video.type === 'Trailer' && video.site === 'YouTube');
     
-    // Get streaming availability
-    const streamingPlatforms = await getStreamingAvailability(movie.id);
-    
     // Construct Wikipedia URL
-    const wikiUrl = `https://en.wikipedia.org/wiki/${encodeURIComponent(movie.title)}`;
+    const movieYear = movie.release_date ? movie.release_date.substring(0, 4) : year;
+    const wikiUrl = `https://en.wikipedia.org/wiki/${encodeURIComponent(movie.title.replace(/\s+/g, '_'))}${movieYear ? `_(${movieYear}_film)` : ''}`;
     
-    return {
+    // Construct result object
+    const result = {
       id: movie.id,
       title: movie.title,
       posterUrl: movie.poster_path ? `${TMDB_IMAGE_BASE_URL}${movie.poster_path}` : null,
-      year: movie.release_date ? movie.release_date.substring(0, 4) : 'Unknown',
+      year: movie.release_date ? movie.release_date.substring(0, 4) : (year || 'Unknown'),
       summary: movie.overview || details?.overview || 'No summary available',
       trailerUrl: trailer ? `https://www.youtube.com/watch?v=${trailer.key}` : null,
       wikiUrl,
       streamingPlatforms
     };
+    
+    // Cache the result
+    movieDetailsCache.set(cacheKey, result);
+    return result;
   } catch (error) {
     console.error('Error fetching movie details:', error);
-    return {
+    
+    // Improved error fallback with better formatting
+    const errorResult = {
       title,
       posterUrl: null,
-      year: 'Unknown',
-      summary: 'Error fetching details',
+      year: year || 'Unknown',
+      summary: 'This movie was recommended based on your search criteria, but we encountered an error while retrieving additional details.',
       trailerUrl: null,
-      wikiUrl: `https://en.wikipedia.org/wiki/${encodeURIComponent(title)}`,
+      wikiUrl: `https://en.wikipedia.org/wiki/${encodeURIComponent(title.replace(/\s+/g, '_'))}${year ? `_(${year}_film)` : ''}`,
       streamingPlatforms: []
     };
+    
+    // Cache the error result
+    movieDetailsCache.set(cacheKey, errorResult);
+    return errorResult;
   }
 };

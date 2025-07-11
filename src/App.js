@@ -12,6 +12,7 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [excludedMovies, setExcludedMovies] = useState([]);
 
   // Set dark mode permanently on initial render
   useEffect(() => {
@@ -27,23 +28,64 @@ function App() {
   };
 
   // Handle search submission
-  const handleSearch = async (query) => {
+  const handleSearch = async (query, exclude = []) => {
+    // Clear previous results and show loading state
     setSearchQuery(query);
     setIsSearching(true);
     setIsLoading(true);
     
+    if (exclude.length === 0) {
+      // If this is a new search (not "more recommendations"), clear movies
+      setMovies([]);
+      setExcludedMovies([]);
+    }
+    
     try {
+      console.log('Searching for:', query);
+      console.log('Excluding:', exclude.map(m => m.title).join(', '));
+      
       // Get movie recommendations from AI models
-      const recommendations = await fetchMovieRecommendations(query);
+      const recommendations = await fetchMovieRecommendations(query, exclude);
+      
+      if (recommendations.length === 0) {
+        console.log('No recommendations returned from AI');
+        if (exclude.length === 0) {
+          setMovies([]);
+        }
+        return;
+      }
+      
+      console.log('Received recommendations:', recommendations.length);
       
       // Fetch additional details for each movie
       const moviesWithDetails = await Promise.all(
-        recommendations.map(movie => fetchMovieDetails(movie.title))
+        recommendations.map(async movie => {
+          try {
+            const details = await fetchMovieDetails(movie.title, movie.year);
+            return {
+              ...movie,
+              ...details
+            };
+          } catch (error) {
+            console.error(`Error fetching details for ${movie.title}:`, error);
+            return movie; // Return original if details fetch fails
+          }
+        })
       );
       
-      setMovies(moviesWithDetails);
+      console.log('Processed movies with details:', moviesWithDetails.length);
+      
+      if (exclude.length > 0) {
+        // If this is "more recommendations", add to existing movies at the top
+        setMovies(prevMovies => [...moviesWithDetails, ...prevMovies]);
+        setExcludedMovies(prevExcluded => [...prevExcluded, ...exclude]);
+      } else {
+        // If this is a new search, replace movies
+        setMovies(moviesWithDetails);
+      }
     } catch (error) {
       console.error('Error fetching recommendations:', error);
+      setMovies([]);
     } finally {
       setIsLoading(false);
     }
@@ -66,10 +108,24 @@ function App() {
           <div className="results-container">
             {isLoading ? (
               <div className="loader-container">
-                <div className="loader">Loading...</div>
+                <div className="loader">Getting you something good to Whatch!</div>
               </div>
             ) : (
-              <MovieList movies={movies} />
+              <>
+                <MovieList movies={movies} />
+                
+                {movies.length > 0 && (
+                  <div className="more-recommendations">
+                    <button
+                      className="more-recommendations-button"
+                      onClick={() => handleSearch(searchQuery, [...movies.map(m => m.title), ...excludedMovies])}
+                      disabled={isLoading}
+                    >
+                      Get More Recommendations
+                    </button>
+                  </div>
+                )}
+              </>
             )}
           </div>
         )}

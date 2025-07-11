@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './SearchForm.css';
+import logo from '../assets/logo.png';
 
 const SearchForm = ({ onSearch, isSearching, onLogoClick }) => {
   const [query, setQuery] = useState('');
@@ -14,12 +15,16 @@ const SearchForm = ({ onSearch, isSearching, onLogoClick }) => {
   return (
     <div className={`search-form-container ${isSearching ? 'searching' : ''}`}>
       <form onSubmit={handleSubmit} className="search-form">
-        <h1
-          className={`app-title ${isSearching ? 'small' : ''} ${onLogoClick ? 'clickable' : ''}`}
+        <div
+          className={`app-logo ${isSearching ? 'small' : ''} ${onLogoClick ? 'clickable' : ''}`}
           onClick={onLogoClick}
         >
-          Whatch<span className="title-accent">?</span>
-        </h1>
+          <img
+            src={logo}
+            alt="Whatch? Logo"
+            className="logo-image"
+          />
+        </div>
         
         <div className="input-wrapper">
           <input
@@ -29,14 +34,13 @@ const SearchForm = ({ onSearch, isSearching, onLogoClick }) => {
             placeholder="Enter a movie vibe (e.g., 'adrenaline-pumping sci-fi heist from the 2010s')"
             className="search-input"
             aria-label="Movie vibe search"
-            disabled={isSearching}
           />
         </div>
         
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           className="search-button"
-          disabled={isSearching || !query.trim()}
+          disabled={!query.trim()}
         >
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />

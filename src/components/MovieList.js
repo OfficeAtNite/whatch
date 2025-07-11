@@ -24,7 +24,7 @@ const MovieList = ({ movies }) => {
 
   return (
     <div className="movie-list-container">
-      <h2 className="results-title">Recommended Movies</h2>
+      <h2 className="results-title">Recommended Whatches</h2>
       
       {/* Display all movies in a responsive grid */}
       <div className="movie-grid">

@@ -7,6 +7,18 @@
   z-index: 0;
   overflow: hidden;
   transition: all 0.5s ease-in-out;
+  background-color: #0f172a; /* Dark blue fallback background */
+  background-image: linear-gradient(to bottom, #0f172a, #1e293b); /* Gradient fallback */
+}
+
+/* Style for when video fails to load */
+.video-background.video-error {
+  background-color: #0f172a; /* Ensure dark background */
+  background-image: linear-gradient(to bottom, #0f172a, #1e293b); /* Gradient fallback */
+}
+
+.video-background.video-error .fullscreen-video {
+  display: none; /* Hide the video element if there's an error */
 }
 
 .fullscreen-video {
@@ -20,6 +32,8 @@
   transform: translateX(-50%) translateY(-50%);
   filter: blur(3px);
   transition: filter 0.5s ease-in-out;
+  object-fit: cover; /* Ensure video covers the entire container */
+  opacity: 0.85; /* Slightly reduce opacity for better text contrast */
 }
 
 .video-background.searching .fullscreen-video {

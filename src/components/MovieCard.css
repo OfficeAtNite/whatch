@@ -1,3 +1,5 @@
+/* MovieCard.css */
+
 .movie-card {
   position: relative;
   background-color: rgba(255, 255, 255, 0.9);
@@ -97,27 +99,84 @@
 .movie-year {
   font-size: 0.9rem;
   color: #64748b;
-  margin: 0 0 0.75rem 0;
+  margin: 0 0 0.25rem 0;
 }
 
 .dark .movie-year {
   color: #94a3b8;
 }
 
+.movie-genres {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: 0 0 0.25rem 0;
+  font-style: italic;
+}
+
+.dark .movie-genres {
+  color: #cbd5e1;
+}
+
+.movie-rating {
+  font-size: 0.85rem;
+  color: #f59e0b;
+  margin: 0 0 0.75rem 0;
+  font-weight: 600;
+}
+
+.dark .movie-rating {
+  color: #fbbf24;
+}
+
+.movie-summary-container {
+  margin-bottom: 1rem;
+  flex-grow: 1;
+  position: relative;
+}
+
 .movie-summary {
   font-size: 0.9rem;
   line-height: 1.5;
   color: #334155;
-  margin-bottom: 1rem;
-  flex-grow: 1;
   display: -webkit-box;
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.movie-summary.expanded {
+  -webkit-line-clamp: unset;
+  max-height: none;
 }
 
 .dark .movie-summary {
   color: #cbd5e1;
+}
+
+.show-more-button {
+  background: none;
+  border: none;
+  color: #6366f1;
+  font-size: 0.8rem;
+  padding: 0.25rem 0;
+  cursor: pointer;
+  margin-top: 0.25rem;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.dark .show-more-button {
+  color: #818cf8;
+}
+
+.show-more-button:hover {
+  color: #4f46e5;
+  text-decoration: underline;
+}
+
+.dark .show-more-button:hover {
+  color: #a5b4fc;
 }
 
 .streaming-platforms {
@@ -139,6 +198,17 @@
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
+}
+
+/* Provider type label */
+.provider-type {
+  display: block;
+  font-size: 0.6rem;
+  opacity: 0.8;
+  margin-top: 2px;
+  text-transform: uppercase;
+  font-weight: normal;
+  letter-spacing: 0;
 }
 
 .platform-badge {
@@ -169,13 +239,17 @@
   background: linear-gradient(135deg, #f40612, #e50914);
 }
 
-/* Amazon Prime Brand Colors */
-.platform-prime {
-  background: linear-gradient(135deg, #00a8e1, #0073a8);
+/* Amazon Prime Brand Colors - Updated to light blue */
+.platform-prime,
+.platform-amazon-prime,
+.platform-amazon-prime-video {
+  background: linear-gradient(135deg, #00c3ff, #0099e6);
 }
 
-.platform-prime:hover {
-  background: linear-gradient(135deg, #1bb8f1, #00a8e1);
+.platform-prime:hover,
+.platform-amazon-prime:hover,
+.platform-amazon-prime-video:hover {
+  background: linear-gradient(135deg, #33d6ff, #00c3ff);
 }
 
 /* Hulu Brand Colors */
@@ -187,22 +261,28 @@
   background: linear-gradient(135deg, #2ef793, #1ce783);
 }
 
-/* Disney+ Brand Colors */
-.platform-disney {
-  background: linear-gradient(135deg, #113ccf, #0e2f9e);
+/* Disney+ Brand Colors - Updated to dark/royal blue */
+.platform-disney,
+.platform-disney-plus {
+  background: linear-gradient(135deg, #0b2e8a, #051c56);
 }
 
-.platform-disney:hover {
-  background: linear-gradient(135deg, #2149df, #113ccf);
+.platform-disney:hover,
+.platform-disney-plus:hover {
+  background: linear-gradient(135deg, #0d3aa8, #0b2e8a);
 }
 
-/* HBO Max Brand Colors */
-.platform-hbo {
-  background: linear-gradient(135deg, #7b2cbf, #5a1e8a);
+/* HBO Max Brand Colors - Updated to purple */
+.platform-hbo,
+.platform-hbo-max,
+.platform-max {
+  background: linear-gradient(135deg, #9b30ff, #7a1dff);
 }
 
-.platform-hbo:hover {
-  background: linear-gradient(135deg, #8b3ccf, #7b2cbf);
+.platform-hbo:hover,
+.platform-hbo-max:hover,
+.platform-max:hover {
+  background: linear-gradient(135deg, #b355ff, #9b30ff);
 }
 
 /* Apple TV+ Brand Colors */
@@ -239,6 +319,29 @@
 
 .platform-badge:not([class*="platform-"]):hover {
   background: linear-gradient(135deg, #7b8390, #6b7280);
+}
+
+/* JustWatch link */
+.justwatch-link {
+  display: block;
+  margin-top: 0.75rem;
+  color: #6366f1;
+  font-size: 0.8rem;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.dark .justwatch-link {
+  color: #818cf8;
+}
+
+.justwatch-link:hover {
+  color: #4f46e5;
+  text-decoration: underline;
+}
+
+.dark .justwatch-link:hover {
+  color: #a5b4fc;
 }
 
 .wiki-button {
