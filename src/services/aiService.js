@@ -48,20 +48,32 @@ export const fetchMovieRecommendations = async (prompt, exclude = []) => {
     }
 
     const data = await response.json();
-    console.log('Raw backend response:', data);
+    console.log('Backend response received:', data);
     console.log('Response type:', typeof data);
-    console.log('Response keys:', Object.keys(data || {}));
-    console.log('Movies property:', data?.movies);
-    console.log('Movies type:', typeof data?.movies);
-    console.log('Movies length:', Array.isArray(data?.movies) ? data.movies.length : 'not array');
-    console.log('Full response structure:', JSON.stringify(data, null, 2));
     
-    if (!data || !data.movies || !Array.isArray(data.movies)) {
-      console.error('Invalid response structure. Expected { movies: [...] }, got:', data);
+    // Handle different possible response structures
+    let movies = [];
+    
+    if (data && Array.isArray(data.movies)) {
+      // Expected format: { movies: [...] }
+      movies = data.movies;
+      console.log('Found movies in expected format:', movies.length);
+    } else if (Array.isArray(data)) {
+      // Fallback: direct array response
+      movies = data;
+      console.log('Found movies as direct array:', movies.length);
+    } else if (data && data.recommendations && Array.isArray(data.recommendations)) {
+      // Alternative format: { recommendations: [...] }
+      movies = data.recommendations;
+      console.log('Found movies in recommendations format:', movies.length);
+    } else {
+      console.error('Invalid response structure. Expected { movies: [...] }, got:', JSON.stringify(data));
+      console.log('Response keys:', data ? Object.keys(data) : 'no data');
       return [];
     }
     
-    return data.movies;
+    console.log('Returning', movies.length, 'movies to frontend');
+    return movies;
   } catch (error) {
     console.error('Error fetching movie recommendations:', error);
     
