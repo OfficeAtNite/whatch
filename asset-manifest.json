@@ -1,15 +1,16 @@
 {
   "files": {
-    "main.css": "/whatch/static/css/main.a8765512.css",
-    "main.js": "/whatch/static/js/main.ecabbb4d.js",
+    "main.css": "/whatch/static/css/main.89481442.css",
+    "main.js": "/whatch/static/js/main.afe7b8c1.js",
     "static/js/453.0096b022.chunk.js": "/whatch/static/js/453.0096b022.chunk.js",
+    "static/media/logo.png": "/whatch/static/media/logo.5780b4841a12a976f22b.png",
     "index.html": "/whatch/index.html",
-    "main.a8765512.css.map": "/whatch/static/css/main.a8765512.css.map",
-    "main.ecabbb4d.js.map": "/whatch/static/js/main.ecabbb4d.js.map",
+    "main.89481442.css.map": "/whatch/static/css/main.89481442.css.map",
+    "main.afe7b8c1.js.map": "/whatch/static/js/main.afe7b8c1.js.map",
     "453.0096b022.chunk.js.map": "/whatch/static/js/453.0096b022.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.a8765512.css",
-    "static/js/main.ecabbb4d.js"
+    "static/css/main.89481442.css",
+    "static/js/main.afe7b8c1.js"
   ]
 }
