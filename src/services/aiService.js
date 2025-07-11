@@ -17,7 +17,11 @@ const BACKEND_BASE_URL = process.env.REACT_APP_BACKEND_URL ||
  */
 export const fetchMovieRecommendations = async (prompt, exclude = []) => {
   try {
+    console.log('=== AI SERVICE DEBUG START ===');
     console.log('Fetching recommendations via backend for:', prompt);
+    console.log('Backend URL being used:', BACKEND_BASE_URL);
+    console.log('Environment NODE_ENV:', process.env.NODE_ENV);
+    console.log('Environment REACT_APP_BACKEND_URL:', process.env.REACT_APP_BACKEND_URL);
     
     // Extract titles of movies to exclude
     // Handle both string arrays and movie objects
@@ -32,24 +36,37 @@ export const fetchMovieRecommendations = async (prompt, exclude = []) => {
     
     console.log('Excluding titles:', excludeTitles);
     
-    const response = await fetch(`${BACKEND_BASE_URL}/api/recommendations`, {
+    const requestBody = {
+      prompt,
+      exclude: excludeTitles
+    };
+    console.log('Request body:', JSON.stringify(requestBody));
+    
+    const fullUrl = `${BACKEND_BASE_URL}/api/recommendations`;
+    console.log('Making request to:', fullUrl);
+    
+    const response = await fetch(fullUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        prompt,
-        exclude: excludeTitles
-      })
+      body: JSON.stringify(requestBody)
     });
 
+    console.log('Response status:', response.status);
+    console.log('Response ok:', response.ok);
+    console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+
     if (!response.ok) {
-      throw new Error(`Backend request failed: ${response.status}`);
+      const errorText = await response.text();
+      console.error('Backend request failed. Status:', response.status, 'Error:', errorText);
+      throw new Error(`Backend request failed: ${response.status} - ${errorText}`);
     }
 
     const data = await response.json();
     console.log('Backend response received:', data);
     console.log('Response type:', typeof data);
+    console.log('Response keys:', data ? Object.keys(data) : 'no data');
     
     // Handle different possible response structures
     let movies = [];
@@ -69,15 +86,24 @@ export const fetchMovieRecommendations = async (prompt, exclude = []) => {
     } else {
       console.error('Invalid response structure. Expected { movies: [...] }, got:', JSON.stringify(data));
       console.log('Response keys:', data ? Object.keys(data) : 'no data');
+      console.log('=== AI SERVICE DEBUG END (EMPTY RESPONSE) ===');
       return [];
     }
     
-    console.log('Returning', movies.length, 'movies to frontend');
+    console.log('Final movies array length:', movies.length);
+    console.log('Sample movie titles:', movies.slice(0, 3).map(m => m.title));
+    console.log('=== AI SERVICE DEBUG END (SUCCESS) ===');
     return movies;
   } catch (error) {
+    console.error('=== AI SERVICE ERROR ===');
     console.error('Error fetching movie recommendations:', error);
+    console.error('Error name:', error.name);
+    console.error('Error message:', error.message);
+    console.error('Error stack:', error.stack);
+    console.log('=== AI SERVICE DEBUG END (ERROR) ===');
     
     // Fallback to demo data if backend is unavailable
+    console.log('Falling back to demo recommendations');
     return getDemoRecommendations(prompt);
   }
 };
