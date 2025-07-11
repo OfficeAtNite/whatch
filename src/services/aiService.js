@@ -48,13 +48,20 @@ export const fetchMovieRecommendations = async (prompt, exclude = []) => {
     }
 
     const data = await response.json();
-    console.log('Backend response:', data);
-    console.log('Backend response type:', typeof data);
-    console.log('Backend response keys:', Object.keys(data));
-    console.log('Movies array:', data.movies);
-    console.log('Movies array length:', data.movies ? data.movies.length : 'undefined');
+    console.log('Raw backend response:', data);
+    console.log('Response type:', typeof data);
+    console.log('Response keys:', Object.keys(data || {}));
+    console.log('Movies property:', data?.movies);
+    console.log('Movies type:', typeof data?.movies);
+    console.log('Movies length:', Array.isArray(data?.movies) ? data.movies.length : 'not array');
+    console.log('Full response structure:', JSON.stringify(data, null, 2));
     
-    return data.movies || [];
+    if (!data || !data.movies || !Array.isArray(data.movies)) {
+      console.error('Invalid response structure. Expected { movies: [...] }, got:', data);
+      return [];
+    }
+    
+    return data.movies;
   } catch (error) {
     console.error('Error fetching movie recommendations:', error);
     
