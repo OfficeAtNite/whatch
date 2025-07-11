@@ -4,7 +4,10 @@
  */
 
 // Backend API Configuration
-const BACKEND_BASE_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3001';
+const BACKEND_BASE_URL = process.env.REACT_APP_BACKEND_URL ||
+  (process.env.NODE_ENV === 'production'
+    ? 'https://triple-feature-backend-ofyld82rb-tees-projects-fe29777c.vercel.app'
+    : 'http://localhost:3001');
 
 /**
  * Fetch movie recommendations from all AI models via backend
