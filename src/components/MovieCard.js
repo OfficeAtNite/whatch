@@ -55,7 +55,7 @@ const MovieCard = ({ movie }) => {
       <div className="movie-poster-container">
         {/* Movie poster (clickable if trailer available) */}
         <img
-          src={imageError ? '/poster-placeholder.jpg' : (safeMovie.posterUrl || '/poster-placeholder.jpg')}
+          src={imageError ? 'https://placehold.co/300x450/1a1a1a/ffffff?text=Movie+Poster' : (safeMovie.posterUrl || 'https://placehold.co/300x450/1a1a1a/ffffff?text=Movie+Poster')}
           alt={`${safeMovie.title} poster`}
           className={`movie-poster ${safeMovie.trailerUrl ? 'has-trailer' : ''}`}
           onClick={handlePosterClick}
