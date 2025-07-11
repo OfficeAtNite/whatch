@@ -649,13 +649,18 @@ app.get('/api/search', async (req, res) => {
 
 // AI Service Functions (moved from frontend)
 async function fetchGptRecommendations(prompt, exclude = []) {
+  console.log(`[GPT] Starting recommendation request for: "${prompt}"`);
+  console.log(`[GPT] Exclude array:`, exclude);
+  
   try {
     const openrouterApiKey = process.env.OPENROUTER_API_KEY;
     
     if (!openrouterApiKey) {
-      console.warn('OpenRouter API key not found');
+      console.warn('[GPT] OpenRouter API key not found');
       return [];
     }
+    
+    console.log(`[GPT] API key found, length: ${openrouterApiKey.length}`);
     
     // Extract year from prompt if present
     const yearMatch = prompt.match(/\b(19\d{2}|20\d{2})\b/);
@@ -669,6 +674,8 @@ async function fetchGptRecommendations(prompt, exclude = []) {
       `Do NOT include these movies in your recommendations: ${exclude.join(', ')}. Provide completely different movies.` :
       '';
 
+    console.log(`[GPT] Making API request to OpenRouter...`);
+    
     const response = await axios.post('https://openrouter.ai/api/v1/chat/completions', {
       model: 'openai/gpt-4o-mini',
       messages: [
@@ -706,16 +713,32 @@ Only return the JSON object, no additional text.`
       }
     });
 
+    console.log(`[GPT] API response status: ${response.status}`);
+    console.log(`[GPT] API response data structure:`, Object.keys(response.data));
+    
     const content = response.data.choices[0]?.message?.content;
-    if (!content) return [];
+    console.log(`[GPT] Content extracted:`, content ? 'Found content' : 'No content');
+    
+    if (!content) {
+      console.warn('[GPT] No content in response');
+      return [];
+    }
 
     const recommendations = JSON.parse(content);
-    return (recommendations.movies || []).map(movie => ({
+    console.log(`[GPT] Parsed recommendations:`, recommendations);
+    console.log(`[GPT] Movie count:`, recommendations.movies ? recommendations.movies.length : 0);
+    
+    const result = (recommendations.movies || []).map(movie => ({
       ...movie,
       source: 'GPT-4'
     }));
+    
+    console.log(`[GPT] Returning ${result.length} movies`);
+    return result;
   } catch (error) {
-    console.error('Error fetching GPT recommendations:', error);
+    console.error('[GPT] Error fetching recommendations:', error.message);
+    console.error('[GPT] Error response:', error.response?.data);
+    console.error('[GPT] Error status:', error.response?.status);
     return [];
   }
 }
