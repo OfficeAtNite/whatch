@@ -49,6 +49,10 @@ export const fetchMovieRecommendations = async (prompt, exclude = []) => {
 
     const data = await response.json();
     console.log('Backend response:', data);
+    console.log('Backend response type:', typeof data);
+    console.log('Backend response keys:', Object.keys(data));
+    console.log('Movies array:', data.movies);
+    console.log('Movies array length:', data.movies ? data.movies.length : 'undefined');
     
     return data.movies || [];
   } catch (error) {
