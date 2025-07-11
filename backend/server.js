@@ -67,9 +67,23 @@ const movieAbbreviations = {
 
 app.post('/api/recommendations', async (req, res) => {
   try {
+    console.log('=== RECOMMENDATIONS ENDPOINT DEBUG ===');
+    console.log('Request method:', req.method);
+    console.log('Request headers:', JSON.stringify(req.headers, null, 2));
+    console.log('Request body:', JSON.stringify(req.body, null, 2));
+    console.log('User-Agent:', req.headers['user-agent']);
+    console.log('Origin:', req.headers.origin);
+    console.log('Referer:', req.headers.referer);
+    
     const { prompt, exclude = [] } = req.body;
     
+    console.log('Extracted prompt:', prompt);
+    console.log('Extracted exclude:', exclude);
+    console.log('Exclude type:', typeof exclude);
+    console.log('Exclude array?', Array.isArray(exclude));
+    
     if (!prompt) {
+      console.log('ERROR: No prompt provided');
       return res.status(400).json({ error: 'Prompt is required' });
     }
 
