@@ -1,18 +1,18 @@
 {
   "files": {
-    "main.css": "/whatch/static/css/main.1a2c6c0b.css",
+    "main.css": "/whatch/static/css/main.8efd14f2.css",
     "main.js": "/whatch/static/js/main.0989449e.js",
     "static/js/453.0096b022.chunk.js": "/whatch/static/js/453.0096b022.chunk.js",
     "static/media/logo.png": "/whatch/static/media/logo.5780b4841a12a976f22b.png",
     "static/media/letterboxd-icon.png": "/whatch/static/media/letterboxd-icon.d67e427e33e78f6c0122.png",
     "static/media/Letterboxd-Logo-H-Pos-RGB.svg.png": "/whatch/static/media/Letterboxd-Logo-H-Pos-RGB.svg.9945270b2746226dcc87.png",
     "index.html": "/whatch/index.html",
-    "main.1a2c6c0b.css.map": "/whatch/static/css/main.1a2c6c0b.css.map",
+    "main.8efd14f2.css.map": "/whatch/static/css/main.8efd14f2.css.map",
     "main.0989449e.js.map": "/whatch/static/js/main.0989449e.js.map",
     "453.0096b022.chunk.js.map": "/whatch/static/js/453.0096b022.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.1a2c6c0b.css",
+    "static/css/main.8efd14f2.css",
     "static/js/main.0989449e.js"
   ]
 }
