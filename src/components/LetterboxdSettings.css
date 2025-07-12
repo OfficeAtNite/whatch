@@ -97,8 +97,8 @@
   font-size: 1.8rem;
 /* Letterboxd Logo Header Styles */
 .letterboxd-logo-header {
-  height: 20px;
-  max-width: 120px;
+  height: 14px;
+  max-width: 80px;
   object-fit: contain;
 }
 
