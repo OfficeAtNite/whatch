@@ -34,6 +34,73 @@ html, body {
 .search-container.searching {
   height: auto;
   padding-top: 2rem;
+
+/* Search with Settings Layout */
+.search-with-settings {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Settings Button Styles */
+.settings-button-container {
+  flex-shrink: 0;
+}
+
+.settings-button {
+  background: rgba(30, 41, 59, 0.9);
+  border: 1px solid #475569;
+  color: #f8fafc;
+  padding: 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.2rem;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.settings-button:hover {
+  background: rgba(51, 65, 85, 0.9);
+  border-color: #64748b;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.settings-button:active {
+  transform: translateY(0);
+}
+
+/* Responsive adjustments for search with settings */
+@media (max-width: 640px) {
+  .search-with-settings {
+    gap: 16px;
+    padding: 0 16px;
+  }
+  
+  .settings-button {
+    width: 44px;
+    height: 44px;
+    font-size: 1.1rem;
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-with-settings {
+    flex-direction: column;
+    gap: 20px;
+  }
+}
+
 }
 
 .results-container {
@@ -129,4 +196,56 @@ html, body {
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
+}
+
+/* Settings Button Styles */
+.settings-button-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 50;
+}
+
+.settings-button {
+  background: rgba(30, 41, 59, 0.9);
+  border: 1px solid #475569;
+  color: #f8fafc;
+  padding: 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.2rem;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.settings-button:hover {
+  background: rgba(51, 65, 85, 0.9);
+  border-color: #64748b;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.settings-button:active {
+  transform: translateY(0);
+}
+
+/* Responsive adjustments for settings button */
+@media (max-width: 640px) {
+  .settings-button-container {
+    top: 15px;
+    right: 15px;
+  }
+  
+  .settings-button {
+    width: 44px;
+    height: 44px;
+    font-size: 1.1rem;
+    padding: 10px;
+  }
 }

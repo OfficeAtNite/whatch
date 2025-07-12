@@ -1,0 +1,407 @@
+/* Letterboxd Settings Modal Styles */
+.letterboxd-settings-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.letterboxd-settings-modal {
+  background: #1a1a1a;
+  border-radius: 12px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  border: 1px solid #333;
+}
+
+.letterboxd-settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #333;
+  background: #222;
+  border-radius: 12px 12px 0 0;
+}
+
+.letterboxd-settings-header h2 {
+  margin: 0;
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 2rem;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.close-button:hover {
+  background: #333;
+  color: #fff;
+}
+
+.letterboxd-settings-content {
+  padding: 24px;
+}
+
+/* Profile Summary Styles */
+.profile-summary {
+  background: #222;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 24px;
+  border: 1px solid #333;
+}
+
+.profile-summary h3 {
+  color: #fff;
+  margin: 0 0 16px 0;
+  font-size: 1.2rem;
+}
+
+.profile-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat-number {
+  display: block;
+  font-size: 1.8rem;
+/* Letterboxd Logo Header Styles */
+.letterboxd-logo-header {
+  height: 28px;
+  max-width: 180px;
+  object-fit: contain;
+}
+
+  font-weight: bold;
+  color: #8b5cf6;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.top-genres h4,
+.favorite-directors h4 {
+  color: #fff;
+  margin: 16px 0 8px 0;
+  font-size: 1rem;
+}
+
+.genre-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.genre-tag {
+  background: #333;
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  border: 1px solid #444;
+}
+
+.director-list {
+  color: #ccc;
+  font-style: italic;
+}
+
+/* Import Section Styles */
+.import-section h3 {
+  color: #fff;
+  margin: 0 0 8px 0;
+  font-size: 1.3rem;
+}
+
+.import-section p {
+  color: #ccc;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.import-option {
+  background: #222;
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid #333;
+}
+
+.import-option h4 {
+  color: #fff;
+  margin: 0 0 8px 0;
+  font-size: 1.1rem;
+}
+
+.import-option p {
+  color: #999;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+}
+
+.file-input-wrapper {
+  margin-bottom: 12px;
+}
+
+.file-input-wrapper input[type="file"] {
+  display: none;
+}
+
+.file-input-label {
+  display: inline-block;
+  background: #8b5cf6;
+  color: #000;
+  padding: 12px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.file-input-label:hover {
+  background: #a855f7;
+  transform: translateY(-1px);
+}
+
+.guide-button {
+  background: none;
+  border: 1px solid #555;
+  color: #ccc;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+}
+
+.guide-button:hover {
+  background: #333;
+  border-color: #666;
+  color: #fff;
+}
+
+.import-guide {
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 6px;
+  padding: 16px;
+  margin-top: 12px;
+}
+
+.import-guide h5 {
+  color: #fff;
+  margin: 0 0 12px 0;
+  font-size: 0.95rem;
+}
+
+.import-guide ol {
+  color: #ccc;
+  margin: 0;
+  padding-left: 20px;
+}
+
+.import-guide li {
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+
+.import-guide a {
+  color: #8b5cf6;
+  text-decoration: none;
+}
+
+.import-guide a:hover {
+  text-decoration: underline;
+}
+
+/* Username Section Styles */
+.username-section {
+  background: #222;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 24px 0;
+  border: 1px solid #333;
+}
+
+.username-section h4 {
+  color: #fff;
+  margin: 0 0 12px 0;
+  font-size: 1.1rem;
+}
+
+.username-input {
+  width: 100%;
+  padding: 12px;
+  background: #111;
+  border: 1px solid #444;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 1rem;
+  margin-bottom: 8px;
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+.username-input:focus {
+  outline: none;
+  border-color: #8b5cf6;
+  background: #1a1a1a;
+}
+
+.username-note {
+  color: #999;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+/* Import Status Styles */
+.import-status {
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin: 16px 0;
+  font-weight: 500;
+}
+
+.import-status.success {
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid #8b5cf6;
+  color: #8b5cf6;
+}
+
+.import-status.error {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid #ef4444;
+  color: #ef4444;
+}
+
+/* Settings Actions Styles */
+.settings-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin: 24px 0 16px 0;
+  padding-top: 20px;
+  border-top: 1px solid #333;
+}
+
+.clear-button {
+  background: none;
+  border: 1px solid #ef4444;
+  color: #ef4444;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.clear-button:hover {
+  background: #ef4444;
+  color: #fff;
+}
+
+.done-button {
+  background: #8b5cf6;
+  border: none;
+  color: #000;
+  padding: 10px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.done-button:hover {
+  background: #a855f7;
+  transform: translateY(-1px);
+}
+
+/* Info Section Styles */
+.letterboxd-info {
+  background: #111;
+  border-radius: 8px;
+  padding: 16px;
+  border: 1px solid #333;
+}
+
+.letterboxd-info p {
+  color: #fff;
+  margin: 0 0 12px 0;
+  font-weight: 500;
+}
+
+.letterboxd-info ul {
+  color: #ccc;
+  margin: 0;
+  padding-left: 20px;
+}
+
+.letterboxd-info li {
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .letterboxd-settings-overlay {
+    padding: 10px;
+  }
+  
+  .letterboxd-settings-modal {
+    max-height: 90vh;
+  }
+  
+  .letterboxd-settings-header {
+    padding: 16px 20px;
+  }
+  
+  .letterboxd-settings-content {
+    padding: 20px;
+  }
+  
+  .profile-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .settings-actions {
+    flex-direction: column;
+  }
+  
+  .settings-actions button {
+    width: 100%;
+  }
+}

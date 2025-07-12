@@ -34,11 +34,19 @@ export const fetchMovieRecommendations = async (prompt, exclude = []) => {
       return '';
     }).filter(title => title); // Remove any empty strings
     
-    console.log('Excluding titles:', excludeTitles);
+    // Remove duplicates from exclude list
+    const uniqueExcludeTitles = [...new Set(excludeTitles)];
+    
+    console.log('Excluding titles:', uniqueExcludeTitles.length, 'unique movies');
+    if (uniqueExcludeTitles.length > 10) {
+      console.log('Sample excluded titles:', uniqueExcludeTitles.slice(0, 10).join(', '), '...');
+    } else {
+      console.log('Excluded titles:', uniqueExcludeTitles.join(', '));
+    }
     
     const requestBody = {
       prompt,
-      exclude: excludeTitles
+      exclude: uniqueExcludeTitles
     };
     console.log('Request body:', JSON.stringify(requestBody));
     

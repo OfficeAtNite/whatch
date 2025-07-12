@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './MovieCard.css';
 
-const MovieCard = ({ movie }) => {
+const MovieCard = ({ movie, letterboxdProfile = null }) => {
   const [showTrailer, setShowTrailer] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [showFullDescription, setShowFullDescription] = useState(false);
@@ -49,6 +49,26 @@ const MovieCard = ({ movie }) => {
   const closeTrailer = () => {
     setShowTrailer(false);
   };
+  
+  // Generate Letterboxd URL for the movie
+  const getLetterboxdUrl = (movie) => {
+    const slug = movie.title.toLowerCase()
+      .replace(/[^a-z0-9\s]/g, '') // Remove special characters
+      .replace(/\s+/g, '-') // Replace spaces with hyphens
+      .replace(/-+/g, '-') // Replace multiple hyphens with single
+      .replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
+    
+    const year = movie.year || '';
+    return `https://letterboxd.com/film/${slug}${year ? `-${year}` : ''}/`;
+  };
+  
+  // Get user rating from Letterboxd profile if available
+  const getUserRating = () => {
+    if (!letterboxdProfile || !letterboxdProfile.ratings) return null;
+    return letterboxdProfile.ratings.get(safeMovie.title) || null;
+  };
+  
+  const userRating = getUserRating();
 
   return (
     <div className="movie-card">
@@ -133,16 +153,45 @@ const MovieCard = ({ movie }) => {
           </div>
         )}
         
-        {/* Wiki button */}
-        {safeMovie.wikiUrl && (
+        {/* External links */}
+        <div className="external-links">
+          {safeMovie.wikiUrl && (
+            <a
+              href={safeMovie.wikiUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="external-link wiki-button"
+            >
+              Wikipedia
+            </a>
+          )}
+          
           <a
-            href={safeMovie.wikiUrl}
+            href={getLetterboxdUrl(safeMovie)}
             target="_blank"
             rel="noopener noreferrer"
-            className="wiki-button"
+            className="external-link letterboxd-button"
           >
-            Wiki
+            Letterboxd
           </a>
+        </div>
+        
+        {/* User's Letterboxd rating if available */}
+        {userRating && (
+          <div className="user-rating">
+            <span className="rating-label">Your rating:</span>
+            <div className="star-rating">
+              {[1, 2, 3, 4, 5].map(star => (
+                <span
+                  key={star}
+                  className={`star ${star <= userRating ? 'filled' : ''}`}
+                >
+                  ⭐
+                </span>
+              ))}
+              <span className="rating-text">({userRating}/5)</span>
+            </div>
+          </div>
         )}
         
         {/* AI source badge */}

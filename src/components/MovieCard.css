@@ -1,3 +1,123 @@
+/* External Links Styles */
+.external-links {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0;
+  flex-wrap: wrap;
+}
+
+.external-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  background: #374151;
+  color: #f9fafb;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: 1px solid #4b5563;
+}
+
+.external-link:hover {
+  background: #4b5563;
+  border-color: #6b7280;
+  transform: translateY(-1px);
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.letterboxd-button {
+  background: #8b5cf6 !important;
+  color: #000000 !important;
+  border-color: #8b5cf6 !important;
+}
+
+.letterboxd-button:hover {
+  background: #00b800 !important;
+  border-color: #00b800 !important;
+  color: #000000 !important;
+}
+
+.wiki-button {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border-color: #ffffff !important;
+}
+
+.wiki-button:hover {
+  background: #f3f4f6 !important;
+  color: #000000 !important;
+  border-color: #f3f4f6 !important;
+}
+
+/* User Rating Styles */
+.user-rating {
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid #a855f7;
+  border-radius: 8px;
+  padding: 12px;
+  margin: 12px 0;
+}
+
+.rating-label {
+  display: block;
+  color: #a855f7;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.star-rating {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.star {
+  font-size: 1.1rem;
+  opacity: 0.3;
+  transition: opacity 0.2s ease;
+}
+
+.star.filled {
+  opacity: 1;
+}
+
+.rating-text {
+  margin-left: 8px;
+  color: #a855f7;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* Responsive adjustments for new features */
+@media (max-width: 640px) {
+  .external-links {
+    gap: 6px;
+  }
+  
+  .external-link {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+  }
+  
+  .user-rating {
+    padding: 10px;
+  }
+  
+  .star {
+    font-size: 1rem;
+  }
+  
+  .rating-text {
+    font-size: 0.85rem;
+  }
+}
+
 /* MovieCard.css */
 
 .movie-card {

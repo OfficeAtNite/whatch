@@ -2,7 +2,7 @@ import React from 'react';
 import MovieCard from './MovieCard';
 import './MovieList.css';
 
-const MovieList = ({ movies }) => {
+const MovieList = ({ movies, letterboxdProfile = null }) => {
   // Group movies by AI model source
   const groupedMovies = movies.reduce((acc, movie) => {
     if (!acc[movie.source]) {
@@ -29,7 +29,11 @@ const MovieList = ({ movies }) => {
       {/* Display all movies in a responsive grid */}
       <div className="movie-grid">
         {movies.map((movie, index) => (
-          <MovieCard key={`${movie.id || movie.title}-${index}`} movie={movie} />
+          <MovieCard
+            key={`${movie.id || movie.title}-${index}`}
+            movie={movie}
+            letterboxdProfile={letterboxdProfile}
+          />
         ))}
       </div>
       
